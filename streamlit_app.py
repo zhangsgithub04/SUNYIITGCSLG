@@ -16,10 +16,10 @@ def LLM_Response(question):
     response = chat.send_message(question,stream=True)
     return response
 
-st.title("Chat Application using Gemini Pro")
+st.title("SUNY IITG CyberSecurity Lab Procedure Generator")
 
-user_quest = st.text_input("Ask a question:")
-btn = st.button("Ask")
+user_quest = st.text_input("Lab topic")
+btn = st.button("Generate")
 
 if btn and user_quest:
     result = LLM_Response(user_quest)
