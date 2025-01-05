@@ -24,8 +24,12 @@ def get_llm_response(question, context=None):
         else:
             response = chat.send_message(question, stream=True)
         return response
-    except Exception as e:
+    except AttributeError as e:
         st.error(f"Error getting LLM response: {str(e)}")
+        return None
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        return None
 
 # Function to check relevance
 def check_relevance(initial_prompt, new_message):
@@ -51,7 +55,8 @@ def check_relevance(initial_prompt, new_message):
 
         return False
     except Exception as e:
-        st.error(f"Error checking relevance: {str(e)}")
+        st.error(f"An error occurred: {str(e)}")
+        return False
 
 # Streamlit app title
 st.title("SUNY IITG CyberSecurity Lab Procedure Generator")
@@ -71,9 +76,10 @@ if btn and user_quest:
 
     # Get the initial response
     result = get_llm_response(user_quest, context)
-    st.subheader("Response : ")
-    for word in result:
-        st.text(word.text)
+    if result:
+        st.subheader("Response : ")
+        for word in result:
+            st.text(word.text)
 
     # Follow-up question input
     follow_up_quest = st.text_input("Follow-up question")
@@ -86,6 +92,7 @@ if btn and user_quest:
         else:
             # Get the response to the follow-up question using the stored context
             result = get_llm_response(follow_up_quest, context)
-            st.subheader("Response : ")
-            for word in result:
-                st.text(word.text)
+            if result:
+                st.subheader("Response : ")
+                for word in result:
+                    st.text(word.text)
